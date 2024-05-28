@@ -1,6 +1,6 @@
 package IO
 
-import org.apache.spark.sql.{DataFrame, DataFrameReader}
+import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row}
 
 package object LAS {
   implicit class LASDataFrameReader(reader: DataFrameReader) {
@@ -16,4 +16,12 @@ package object LAS {
     //def las: (String*) => DataFrame =
     //   reader.format("IO.LAS.LAS").load
   }
+
+  implicit class LasDataFrameWriter(writer: DataFrameWriter[Row])
+
+  /**
+    */
+  def las: String = ???
+  //  writer.format("IO.LAS.LAS").write
+
 }

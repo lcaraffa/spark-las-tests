@@ -1,7 +1,7 @@
 package IO.LAS.DataSourceV1
 
-import com.github.mreutegg.laszip4j.LASReader
 import com.github.mreutegg.laszip4j.laslib.LASwriterLAS
+import com.github.mreutegg.laszip4j.laszip.LASpoint
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.mapreduce.TaskAttemptContext
 import org.apache.spark.internal.Logging
@@ -9,7 +9,7 @@ import org.apache.spark.sql.catalyst.InternalRow
 import org.apache.spark.sql.execution.datasources.{CodecStreams, OutputWriter}
 import org.apache.spark.sql.types.StructType
 
-import java.io.{File, PrintStream}
+import java.io.PrintStream
 
 /** @param path
   * @param dataSchema
@@ -27,14 +27,23 @@ class LASOutputWriter(
   private val stream =
     new PrintStream(CodecStreams.createOutputStream(context, new Path(path)))
 
-  val file_test = new LASReader(new File("/home/MBunel/Bureau/pt002561.las"))
+  //private val las_header = new LASheader()
+  private val las_writer = new LASwriterLAS()
+  //las_writer.open(stream, las_header, 'a', 4, 10)
 
-  private val header = file_test.getHeader
-  private val writer = new LASwriterLAS()
+  override def write(row: InternalRow): Unit = {
+    val typed_row = row.toSeq(dataSchema)
 
-  override def write(row: InternalRow): Unit = ???
+    val point = new LASpoint()
+    //point.set_x(typed_row(0))
+    //point.set_y(typed_row(1))
+    //point.set_z(typed_row(3))
+
+    las_writer.write_point(point)
+  }
   override def close(): Unit = {
-    writer.close(true)
+    //las_writer.update_header(las_header)
+    las_writer.close()
   }
 
   override def path(): String = path

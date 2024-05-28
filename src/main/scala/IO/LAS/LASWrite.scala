@@ -24,6 +24,9 @@ case class LASWrite(
       dataSchema: StructType
   ): OutputWriterFactory = {
 
+    // Options for writer
+    val LasOptions = new LASOptions(options)
+
     new OutputWriterFactory {
       override def getFileExtension(context: TaskAttemptContext): String =
         ".las"
@@ -32,7 +35,7 @@ case class LASWrite(
           path: String,
           dataSchema: StructType,
           context: TaskAttemptContext
-      ): OutputWriter = ???
+      ): OutputWriter = LASOutputWriter(path, dataSchema, context, LasOptions)
     }
   }
 }
