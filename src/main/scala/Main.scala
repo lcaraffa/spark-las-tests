@@ -27,7 +27,7 @@ object Main extends App {
     .format("IO.LAS.LAS")
     .option("las_reader", "las4j")
     .load(
-      "/home/MBunel/Documents/temp/debug_chloe/Semis_2021_0486_6224_LA93_IGN69.laz"
+      "/opt/workspace/spark-las-tests/datas/lidar_hd_crop/LHD_FXX_0635_6857_PTS_C_LAMB93_IGN69.copc.crop.laz"
     )
 
   // Check import
@@ -49,7 +49,7 @@ object Main extends App {
   // Write a sample in parquet (NOT in GEOparquet)
   las_dataframe.write
     .parquet(
-      "/home/MBunel/Documents/temp/debug_chloe/Semis_2021_0486_6224_LA93_IGN69.parquet"
+      "/opt/workspace/spark-las-tests/datas/lidar_hd_crop/Semis_2021_0486_6224_LA93_IGN69.parquet"
     )
 
 }
