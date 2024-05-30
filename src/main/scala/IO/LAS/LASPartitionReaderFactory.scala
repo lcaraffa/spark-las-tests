@@ -25,7 +25,8 @@ case class LASPartitionReaderFactory(
     // We return a LasPartitionReader according to the "las_reader" parameter
     options.las_reader match {
       case "las4j" => new LAS4jReader(conf, readDataSchema, path)
-      case "pdal"  => new LASPdalReader(conf, readDataSchema, path)
+      // Commented for remove all Pdal deps
+      // case "pdal"  => new LASPdalReader(conf, readDataSchema, path)
     }
   }
 }

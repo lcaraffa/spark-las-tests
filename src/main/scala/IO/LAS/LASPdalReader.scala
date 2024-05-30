@@ -1,5 +1,8 @@
 package IO.LAS
 
+// Commented for desactivate all uses of pdal
+
+/*
 import io.pdal.PointViewIterator
 import io.pdal.pipeline.ReadLas
 import org.apache.hadoop.conf.Configuration
@@ -10,8 +13,8 @@ import org.apache.spark.sql.types.StructType
 import java.net.URI
 
 /** Las file reader, based on pdal
-  * @param path
-  */
+ * @param path
+ */
 class LASPdalReader(conf: Configuration, readDataSchema: StructType, path: URI)
     extends PartitionReader[InternalRow] {
 
@@ -70,3 +73,4 @@ class LASPdalReader(conf: Configuration, readDataSchema: StructType, path: URI)
     InternalRow.fromSeq(fields_values)
   }
 }
+ */

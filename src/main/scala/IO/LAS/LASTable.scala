@@ -26,8 +26,8 @@ case class LASTable(
 
   override def inferSchema(files: Seq[FileStatus]): Option[StructType] = {
     //val parsedOptions = new LASOptions(options)
-    //Las4JDataSource.inferSchema(sparkSession, files, null)
-    PdalDataSource.inferSchema(sparkSession, files, null)
+    Las4JDataSource.inferSchema(sparkSession, files, null)
+    //PdalDataSource.inferSchema(sparkSession, files, null)
   }
 
   override def formatName: String = "LAS"

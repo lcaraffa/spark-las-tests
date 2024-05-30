@@ -14,11 +14,11 @@ libraryDependencies ++= Seq(
 
 // LasZIP4J Backend
 libraryDependencies += "com.github.mreutegg" % "laszip4j" % "0.17"
-libraryDependencies ++= Seq(
-  "io.pdal" %% "pdal" % "2.5.1", // core library
-  "io.pdal" % "pdal-native" % "2.5.1", // jni binaries
-  "io.pdal" %% "pdal-scala" % "2.5.1" // if scala core library (if required)
-)
+// libraryDependencies ++= Seq(
+//   "io.pdal" %% "pdal" % "2.5.1", // core library
+//   "io.pdal" % "pdal-native" % "2.5.1", // jni binaries
+//   "io.pdal" %% "pdal-scala" % "2.5.1" // if scala core library (if required)
+// )
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "latest.integration" % Test
 )

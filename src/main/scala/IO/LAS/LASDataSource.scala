@@ -1,14 +1,13 @@
 package IO.LAS
 
-import io.pdal.pipeline.ReadLas
+// import io.pdal.pipeline.ReadLas
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path.getPathWithoutSchemeAndAuthority
 import org.apache.hadoop.fs.{FileStatus, FileSystem}
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.catalyst.InternalRow
-import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.types._
-import org.apache.spark.sql.{Dataset, SparkSession, functions}
+import org.apache.spark.sql.{Dataset, SparkSession}
 
 /** Common functions to treat las data file
   */
@@ -57,7 +56,8 @@ object LASDataSource extends Logging {
   def apply(options: LASOptions): LASDataSource = {
     options.las_reader match {
       case "las4j" => Las4JDataSource
-      case "pdal"  => PdalDataSource
+      // Remove all pdal calls
+      // case "pdal"  => PdalDataSource
     }
   }
 }
@@ -110,6 +110,8 @@ object Las4JDataSource extends LASDataSource {
   }
 }
 
+// Removing all pdal imports
+/*
 object PdalDataSource extends LASDataSource {
   override def fieldExtractor(
       structField: StructField
@@ -150,3 +152,4 @@ object PdalDataSource extends LASDataSource {
     StructType(LASDimension.pointFormatToSchema(6))
   }
 }
+ */
