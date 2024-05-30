@@ -14,7 +14,7 @@ RUN apt-get update \
     && apt-get update \
     && apt-get install sbt
 
-COPY ./* .
+COPY ./* ./
 
 RUN cd /opt/workspace/spark-las-tests \
      && sbt compile &&  sbt package
