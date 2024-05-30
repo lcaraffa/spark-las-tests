@@ -7,12 +7,6 @@ object Main extends App {
     .builder()
     .master("local[*]")
     .appName("Testtouille")
-    // The PDAL bindings are oly needed for use the las_reader option
-    // with the "pdal" value
-    //.config(
-    //  "spark.executor.extraLibraryPath",
-    //  "/home/MBunel/Documents/Code/Test_pdal_scala/libs/PDAL-2.5.6-src/build/lib"
-    //)
     .getOrCreate();
 
   // Check the initialisation
