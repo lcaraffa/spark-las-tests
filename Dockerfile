@@ -1,5 +1,5 @@
-FROM drjiayu/sedona-jupyterlab:latest
-
+# FROM drjiayu/sedona-jupyterlab:latest
+FROM apache/sedona
 
 WORKDIR /opt/workspace/spark-las-tests
 

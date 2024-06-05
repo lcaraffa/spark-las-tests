@@ -6,3 +6,18 @@ services:
       dockerfile: Dockerfile
     environment:
       - JAVA_OPTS=--add-exports java.base/sun.nio.ch=ALL-UNNAMED
+
+  sedonajupyter:
+    build :
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - JAVA_OPTS=--add-exports java.base/sun.nio.ch=ALL-UNNAMED
+      - DRIVER_MEM=2g
+      - EXECUTOR_MEM=2g
+    ports:
+      - 127.0.0.1:8888:8888    
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:8081:8081
+      - 127.0.0.1:4040:4040      
+    command: /bin/bash -c "/opt/start.sh"      

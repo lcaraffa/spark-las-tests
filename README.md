@@ -10,7 +10,8 @@ to run test :
 ```sbt run```
 to run interpretor :
 ```sbt console``` 
-## Run Sedona console
+# Run Sedona jupyterlab
    ```console 
-	/opt/spark/bin/spark-shell  --jars /opt/spark/jars/sedona-spark-shaded-3.4_2.12-1.5.0-SNAPSHOT.jar
+   docker-compose up sedonajupyter
    ```
+   then go to http://localhost:8888/lab?
