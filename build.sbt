@@ -7,6 +7,8 @@ lazy val root = (project in file("."))
     name := "Test_pdal_scala"
   )
 
+
+
 // Spark dependencies
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % "3.5.0"
@@ -14,6 +16,12 @@ libraryDependencies ++= Seq(
 
 // LasZIP4J Backend
 libraryDependencies += "com.github.mreutegg" % "laszip4j" % "0.17"
+libraryDependencies ++= Seq(
+  "org.apache.sedona" % "sedona-spark-shaded-3.0_2.13" % "1.5.2",
+  "org.datasyslab" % "geotools-wrapper" % "1.5.2-28.2"
+)
+
+
 // libraryDependencies ++= Seq(
 //   "io.pdal" %% "pdal" % "2.5.1", // core library
 //   "io.pdal" % "pdal-native" % "2.5.1", // jni binaries
