@@ -3,7 +3,7 @@ FROM drjiayu/sedona-jupyterlab:latest
 
 WORKDIR /opt/workspace/spark-las-tests
 
-RUN apt-get update && apt-get install -y nano git --assume-yes
+RUN apt-get update && apt-get install -y nano git vim --assume-yes
 
 RUN apt-get update \
     && apt-get install apt-transport-https curl gnupg -yqq \
