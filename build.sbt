@@ -1,11 +1,13 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "2.13.11"
+ThisBuild / scalaVersion := "2.13.12"
 
 lazy val root = (project in file("."))
   .settings(
     name := "Test_pdal_scala"
   )
+
+
 
 // Spark dependencies
 libraryDependencies ++= Seq(
@@ -14,6 +16,12 @@ libraryDependencies ++= Seq(
 
 // LasZIP4J Backend
 libraryDependencies += "com.github.mreutegg" % "laszip4j" % "0.17"
+libraryDependencies ++= Seq(
+  "org.apache.sedona" % "sedona-spark-shaded-3.0_2.13" % "1.5.2",
+  "org.datasyslab" % "geotools-wrapper" % "1.5.2-28.2"
+)
+
+
 // libraryDependencies ++= Seq(
 //   "io.pdal" %% "pdal" % "2.5.1", // core library
 //   "io.pdal" % "pdal-native" % "2.5.1", // jni binaries

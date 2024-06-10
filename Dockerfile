@@ -1,2 +1,26 @@
-FROM sbtscala/scala-sbt:eclipse-temurin-jammy-19.0.1_10_1.9.3_2.13.11
+# FROM drjiayu/sedona-jupyterlab:latest
+FROM apache/sedona
+
+WORKDIR /opt/workspace/spark-las-tests
+
+RUN apt-get update && apt-get install -y nano git vim --assume-yes
+
+RUN apt-get update \
+    && apt-get install apt-transport-https curl gnupg -yqq \
+    && echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list \
+    && echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list \
+    && curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/scalasbt-release.gpg --import \
+    && chmod 644 /etc/apt/trusted.gpg.d/scalasbt-release.gpg \
+    && apt-get update \
+    && apt-get install sbt
+
+COPY . ./
+
+RUN cd /opt/workspace \
+    && git clone https://github.com/apache/sedona.git  \
+    && cd sedona/examples/spark-sql \
+    mvn clean package
+
+RUN cd /opt/workspace/spark-las-tests \
+     && sbt compile &&  sbt package
 
