@@ -19,7 +19,7 @@ COPY . ./
 RUN cd /opt/workspace \
     && git clone https://github.com/apache/sedona.git  \
     && cd sedona/examples/spark-sql \
-    mvn clean package
+    && mvn clean package
 
 RUN cd /opt/workspace/spark-las-tests \
      && sbt compile &&  sbt package
