@@ -1,9 +1,20 @@
 Draft of spark las reader-writer
 # Build
+```console 
 docker-compose build
+```
+or 
+```console 
+./scripts/build_image.sh
+```
 # Run test inside container 
+First run and go inside container
 ```console 
 docker-compose run  sedonadocker /bin/bash
+```
+or 
+```console
+./scripts/run_container.sh
 ```
 ##  Run LAS reading tests
 to run test : 
