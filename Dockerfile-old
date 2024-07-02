@@ -1,5 +1,5 @@
 # FROM drjiayu/sedona-jupyterlab:latest
-FROM apache/sedona
+FROM ubuntu:22.04
 
 WORKDIR /opt/workspace/spark-las-tests
 
@@ -21,6 +21,6 @@ RUN cd /opt/workspace \
     && cd sedona/examples/spark-sql \
     && mvn clean package
 
-RUN cd /opt/workspace/spark-las-tests \
-     && sbt compile &&  sbt package
+# RUN cd /opt/workspace/spark-las-tests \
+#      && sbt compile &&  sbt package
 

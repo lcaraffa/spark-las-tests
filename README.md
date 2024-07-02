@@ -27,4 +27,6 @@ to run interpretor :
    cd /opt/workspace/sedona/examples/spark-sql
    $SPARK_HOME/bin/spark-submit --master local[*] --class Main target/sedona-spark-example-1.6.0.jar
    ```
-
+   ```console
+   $SPARK_HOME/bin/spark-shell --master local[*] --jars  target/sedona-spark-example-1.6.0.jar
+   ```

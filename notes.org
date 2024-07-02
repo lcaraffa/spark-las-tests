@@ -1,0 +1,39 @@
+* Scratch
+$SPARK_HOME/bin/spark-shell --master local[*] --jars  target/sedona-spark-example-1.6.0.jar
+
+
+:paste
+import RddExample.{calculateSpatialColocation, visualizeSpatialColocation}
+import SqlExample._
+import VizExample._
+import org.apache.log4j.{Level, Logger}
+import org.apache.sedona.spark.SedonaContext
+import org.apache.sedona.viz.core.Serde.SedonaVizKryoRegistrator
+import org.apache.sedona.viz.sql.utils.SedonaVizRegistrator
+import org.apache.sedona.viz.core.{ImageGenerator, ImageSerializableWrapper, RasterOverlayOperator}
+import org.apache.sedona.viz.extension.visualizationEffect.{ChoroplethMap, HeatMap, ScatterPlot}
+import org.apache.sedona.viz.utils.ImageType
+import org.apache.sedona.core.spatialRDD.{PointRDD, PolygonRDD, RectangleRDD}
+
+  val config = SedonaContext.builder().appName("SedonaSQL-demo")
+    .master("local[*]") // Please comment out this when use it on a cluster
+    .config("spark.kryo.registrator", classOf[SedonaVizKryoRegistrator].getName)
+    .getOrCreate()
+  val sedona = SedonaContext.create(config)
+ SedonaVizRegistrator.registerAll(sedona)
+
+
+
+val resourceFolder = System.getProperty("user.dir")+"/src/test/resources/"
+val PointInputLocation = resourceFolder + "arealm.csv"
+
+val spatialRDD = new PointRDD(sedona.sparkContext, PointInputLocation, PointOffset, PointSplitter, false, PointNumPartitions)
+
+
+var pointDf = sedona.read.format("csv").option("delimiter", ",").option("header", "false").load(PointInputLocation)
+pointDf.selectExpr("ST_Point(cast(_c0 as Decimal(24,20)),cast(_c1 as Decimal(24,20))) as shape")
+
+val lid_parquet = spark.read.parquet("/root/spark-las-tests/datas/lidar_hd_crop/Semis_2021_0486_6224_LA93_IGN69.parquet")
+lid_parquet.selectExpr("ST_Point(X,Y) as shape").collect
+
+val spatialRDD = new PointRDD(sedona.sparkContext, PointInputLocation, PointOffset, PointSplitter, false, PointNumPartitions)
