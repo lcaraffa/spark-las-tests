@@ -1,8 +1,5 @@
-* Scratch
-$SPARK_HOME/bin/spark-shell --master local[*] --jars  target/sedona-spark-example-1.6.0.jar
 
-
-:paste
+import java.awt.Color
 import RddExample.{calculateSpatialColocation, visualizeSpatialColocation}
 import SqlExample._
 import VizExample._
@@ -10,30 +7,56 @@ import org.apache.log4j.{Level, Logger}
 import org.apache.sedona.spark.SedonaContext
 import org.apache.sedona.viz.core.Serde.SedonaVizKryoRegistrator
 import org.apache.sedona.viz.sql.utils.SedonaVizRegistrator
+import org.apache.sedona.core.enums.{GridType, IndexType}
 import org.apache.sedona.viz.core.{ImageGenerator, ImageSerializableWrapper, RasterOverlayOperator}
 import org.apache.sedona.viz.extension.visualizationEffect.{ChoroplethMap, HeatMap, ScatterPlot}
 import org.apache.sedona.viz.utils.ImageType
 import org.apache.sedona.core.spatialRDD.{PointRDD, PolygonRDD, RectangleRDD}
+import org.apache.sedona.sql.utils.Adapter
+import org.apache.sedona.core.spatialOperator.{JoinQuery, KNNQuery, RangeQuery}
 
-  val config = SedonaContext.builder().appName("SedonaSQL-demo")
-    .master("local[*]") // Please comment out this when use it on a cluster
-    .config("spark.kryo.registrator", classOf[SedonaVizKryoRegistrator].getName)
-    .getOrCreate()
-  val sedona = SedonaContext.create(config)
- SedonaVizRegistrator.registerAll(sedona)
+import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.Envelope
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Coordinate;
+
+val config = SedonaContext.builder().appName("SedonaSQL-demo")
+  .master("local[*]") // Please comment out this when use it on a cluster
+  .config("spark.kryo.registrator", classOf[SedonaVizKryoRegistrator].getName)
+  .getOrCreate()
+val sedona = SedonaContext.create(config)
+SedonaVizRegistrator.registerAll(sedona)
 
 
+val LidarDf = spark.read.parquet("/root/spark-las-tests/datas/lidar_hd_crop/Semis_2021_0486_6224_LA93_IGN69.parquet")
 
-val resourceFolder = System.getProperty("user.dir")+"/src/test/resources/"
-val PointInputLocation = resourceFolder + "arealm.csv"
+LidarDf.createOrReplaceTempView("Lidardf")
+var LidarRDD = Adapter.toSpatialRdd(sedona.sql("select ST_Point(Lidardf.X,Lidardf.Y) as point from Lidardf")
+  , "point")
 
-val spatialRDD = new PointRDD(sedona.sparkContext, PointInputLocation, PointOffset, PointSplitter, false, PointNumPartitions)
+LidarRDD.analyze()
+LidarRDD.spatialPartitioning(GridType.KDBTREE)
+LidarRDD.buildIndex(
+  IndexType.RTREE,
+  true
+)
 
+val env = LidarRDD.boundaryEnvelope
+val geometryFactory = new GeometryFactory()
+val pointObject = geometryFactory.createPoint(new Coordinate(-84.01, 34.01))
+val K = 20 
+val result = KNNQuery.SpatialKnnQuery(LidarRDD, pointObject, K, false)
+print(result)
+val imageResolutionX = 1000
+val imageResolutionY = 1000
+val frontImage = new ScatterPlot(imageResolutionX, imageResolutionY, LidarRDD.boundary, true)
+frontImage.CustomizeColor(0, 0, 0, 255, Color.GREEN, true)
+frontImage.Visualize(sedona.sparkContext, LidarRDD)
 
-var pointDf = sedona.read.format("csv").option("delimiter", ",").option("header", "false").load(PointInputLocation)
-pointDf.selectExpr("ST_Point(cast(_c0 as Decimal(24,20)),cast(_c1 as Decimal(24,20))) as shape")
+val backImage = new HeatMap(imageResolutionX, imageResolutionY, env, true, 1)
+backImage.Visualize(sedona.sparkContext, LidarRDD)
+val overlayOperator = new RasterOverlayOperator(backImage.rasterImage)
+overlayOperator.JoinImage(frontImage.rasterImage)
 
-val lid_parquet = spark.read.parquet("/root/spark-las-tests/datas/lidar_hd_crop/Semis_2021_0486_6224_LA93_IGN69.parquet")
-lid_parquet.selectExpr("ST_Point(X,Y) as shape").collect
-
-val spatialRDD = new PointRDD(sedona.sparkContext, PointInputLocation, PointOffset, PointSplitter, false, PointNumPartitions)
+val imageGenerator = new ImageGenerator
+imageGenerator.SaveRasterImageAsLocalFile(overlayOperator.backRasterImage,System.getProperty("user.dir"), ImageType.PNG)
